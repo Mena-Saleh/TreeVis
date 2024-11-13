@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Recursion Visualizer</title>
+    <link rel="stylesheet" href="style.css" />
+    <!-- CodeMirror CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.css"
+    />
+    <!-- Theme -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/theme/monokai.min.css"
+    />
+  </head>
+  <body>
+    <section class="main-container">
+      <div class="side-bar">
+        <select name="algorithm" id="algorithm-select"></select>
+        <div id="editor-container">
+          <textarea name="code-editor" id="code-editor"></textarea>
+        </div>
+      </div>
+      <div class="visualizer-container"></div>
+    </section>
+
+    <!-- CodeMirror JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/javascript/javascript.min.js"></script>
+
+    <!-- Algorithms definitions -->
+    <script src="Scripts/algorithms.js"></script>
+    <!-- Driver script -->
+    <script src="Scripts/main.js"></script>
+    <!-- Tree Drawing script -->
+    <script src="Scripts/drawTree.js"></script>
+  </body>
+</html>
