@@ -283,7 +283,6 @@ function drawRecursionGraph(containerId, graph, speed = 500) {
   // Panning - prevent scrolling on the main page during panning
   const startPan = (e) => {
     e.preventDefault(); // Prevent default to stop page scrolling
-
     isPanning = true;
     const clientX = e.clientX || e.touches[0].clientX;
     const clientY = e.clientY || e.touches[0].clientY;
@@ -294,9 +293,7 @@ function drawRecursionGraph(containerId, graph, speed = 500) {
 
   const movePan = (e) => {
     if (!isPanning) return;
-
     e.preventDefault(); // Prevent default to stop page scrolling
-
     const clientX = e.clientX || e.touches[0].clientX;
     const clientY = e.clientY || e.touches[0].clientY;
     currentTranslateX = clientX - startX;
@@ -337,6 +334,18 @@ function drawRecursionGraph(containerId, graph, speed = 500) {
     initialDistance = null; // Reset initial distance
   };
 
+  // Mouse wheel zoom handling
+  const handleWheelZoom = (e) => {
+    e.preventDefault();
+    const zoomIntensity = 0.1; // Adjust zoom intensity here
+
+    // Determine the direction of the wheel scroll
+    const scaleChange = e.deltaY < 0 ? 1 + zoomIntensity : 1 - zoomIntensity;
+    currentScale = Math.min(Math.max(currentScale * scaleChange, 0.1), 5); // Keep scale between 0.1 and 5
+
+    updateTransform();
+  };
+
   // Update the transform style to apply pan and zoom
   function updateTransform() {
     innerWrapper.style.transform = `translate(${currentTranslateX}px, ${currentTranslateY}px) scale(${currentScale})`;
@@ -355,6 +364,9 @@ function drawRecursionGraph(containerId, graph, speed = 500) {
   container.addEventListener("touchmove", handlePinchZoom, { passive: false });
   container.addEventListener("touchend", endPinchZoom);
   container.addEventListener("touchcancel", endPinchZoom);
+
+  // Add mouse wheel zoom event listener
+  container.addEventListener("wheel", handleWheelZoom, { passive: false });
 
   function updateTransform() {
     innerWrapper.style.transform = `translate(${currentTranslateX}px, ${currentTranslateY}px) scale(${currentScale})`;
