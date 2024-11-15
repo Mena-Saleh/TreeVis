@@ -86,22 +86,26 @@ function fn(n = 5) {
   memo[n] = fn(n - 1) + fn(n - 2);
   return memo[n];
 }`,
-  BinarySearch: `function fn(arr = [1, 3, 5, 7, 9], target = 5, left = 0, right = arr.length - 1) {
-  if (left > right) {
+  BinarySearch: `function fn(arr = [1, 3, 5, 7, 9, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100], target = 9, offset = 0) {
+  if (arr.length === 0) {
     return -1;
   }
 
-  const mid = Math.floor((left + right) / 2);
+  const mid = Math.floor(arr.length / 2);
+  const midValue = arr[mid];
 
-  if (arr[mid] === target) {
-    return mid;
+  if (midValue === target) {
+    return offset + mid;
   }
 
-  if (arr[mid] > target) {
-    return fn(arr, target, left, mid - 1);
+  if (target < midValue) {
+    return fn(arr.slice(0, mid), target, offset);
   }
 
-  return fn(arr, target, mid + 1, right);
+  else {
+    const result = fn(arr.slice(mid + 1), target, offset + mid + 1);
+    return result !== -1 ? result : -1;
+  }
 }`,
   TowerOfHanoi: `function fn(disks = 3, source = 'A', target = 'C', auxiliary = 'B') {
   if (disks === 1) {

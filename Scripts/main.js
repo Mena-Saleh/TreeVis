@@ -31,14 +31,18 @@ select.addEventListener("change", function () {
   codeEditor.setValue(algorithms[selectedAlgorithm]);
 });
 
-// Run button functionality
-runButton.addEventListener("click", () => {
-  const visualizer = document.getElementById("visualizer");
+let isDrawing = false; // Track if the tree is currently being drawn
 
-  // Clear the visualizer container and remove all children to reset previous runs
-  if (visualizer) {
-    visualizer.innerHTML = "";
+runButton.addEventListener("click", async () => {
+  if (isDrawing) {
+    swal.fire(
+      "Warning",
+      "Tree drawing already in progress. Please wait.",
+      "warning"
+    );
+    return;
   }
+
   const code = codeEditor.getValue();
   const modifiedCode = modifyRecursiveFunction(code);
   const recursionTree = createAndCallModifiedFunction(modifiedCode);
@@ -47,7 +51,7 @@ runButton.addEventListener("click", () => {
     Swal.fire("Compilation Error", "Error creating recursion tree.", "error");
     return;
   }
-  // Visualize the recursion tree
+
   if (recursionTree["nodes"].length > 100) {
     Swal.fire(
       "Drawing Error",
@@ -56,6 +60,17 @@ runButton.addEventListener("click", () => {
     );
     return;
   }
-  drawRecursionGraph("visualizer", recursionGraph, 600);
-  //Need to handle large inputs and panning to the right place
+
+  // Reset the tree and set the drawing flag
+  treeWrapper.innerHTML = ""; // Clear the tree container
+  isDrawing = true;
+
+  try {
+    await drawRecursionGraph(recursionTree); // Draw the tree
+  } catch (error) {
+    console.error("Error during drawing:", error);
+    Swal.fire("Error", "An error occurred while drawing the tree.", "error");
+  } finally {
+    isDrawing = false; // Reset the drawing flag
+  }
 });

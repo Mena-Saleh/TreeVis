@@ -172,8 +172,6 @@ function createAndCallModifiedFunction(functionString, ...args) {
     const modifiedFunction = new Function(`${functionString}\nreturn fn;`);
     const callableFunction = modifiedFunction();
     const result = callableFunction(...args);
-    console.log("Result:", result);
-    console.log(recursionGraph);
     return recursionGraph;
   } catch (error) {
     Swal.fire("Compilation Error", error.message, "error");
