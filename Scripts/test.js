@@ -1,4 +1,4 @@
-function drawRecursionGraph(containerId, graph, speed = 500) {
+function drawRecursionGraph(containerId, graph, speed = 200) {
   const container = document.getElementById(containerId);
   if (!container) {
     console.error(`Container with id ${containerId} not found.`);
@@ -6,20 +6,21 @@ function drawRecursionGraph(containerId, graph, speed = 500) {
   }
   container.innerHTML = "";
 
-  // Colors
-  activeColor = "#6699CC";
-  returnColor = "#F9C784";
-
   // Create an inner wrapper
   const innerWrapper = document.createElement("div");
-  innerWrapper.classList.add("tree-wrapper"); // Class for styling
-
+  innerWrapper.style.position = "relative";
+  innerWrapper.style.transformOrigin = "0 0"; // Set transform origin for scaling
   container.appendChild(innerWrapper);
 
   // Create a text display element above the graph
   const textDisplay = document.createElement("div");
-  textDisplay.classList.add("text-display");
-
+  textDisplay.style.position = "absolute";
+  textDisplay.style.top = "10px";
+  textDisplay.style.left = "50%";
+  textDisplay.style.transform = "translateX(-50%)";
+  textDisplay.style.color = "white";
+  textDisplay.style.fontSize = "18px";
+  textDisplay.style.fontWeight = "bold";
   container.appendChild(textDisplay);
 
   const nodeSize = 40;
@@ -65,10 +66,10 @@ function drawRecursionGraph(containerId, graph, speed = 500) {
         // Update the text display to show the function call
         updateTextDisplay(
           `Calling fn(${formatParams(node.params)})`,
-          activeColor
+          "#8A9FEE"
         );
 
-        await drawNodeElement(node, x, y, activeColor); // Set active color
+        await drawNodeElement(node, x, y, "#8A9FEE"); // Set active color
 
         if (parent) {
           const parentX = parent.xPosition;
@@ -94,10 +95,10 @@ function drawRecursionGraph(containerId, graph, speed = 500) {
           `fn(${formatParams(node.params)}) returns ${formatReturnValue(
             node.returnValue
           )}`,
-          returnColor
+          "#DA7635"
         );
 
-        await setNodeColor(node, x, y, returnColor); // Set return color briefly
+        await setNodeColor(node, x, y, "#DA7635"); // Set return color briefly
 
         // Clear the text display after a short delay
         setTimeout(() => {
@@ -112,12 +113,22 @@ function drawRecursionGraph(containerId, graph, speed = 500) {
   function drawNodeElement(node, x, y, color = "transparent") {
     return new Promise((resolve) => {
       const nodeElement = document.createElement("div");
-      nodeElement.classList.add("node-element");
+      nodeElement.style.position = "absolute";
       nodeElement.style.left = `${x}px`;
       nodeElement.style.top = `${y}px`;
       nodeElement.style.width = `${nodeSize}px`;
       nodeElement.style.height = `${nodeSize}px`;
+      nodeElement.style.borderRadius = "50%";
+      nodeElement.style.border = "2px solid white";
       nodeElement.style.backgroundColor = color;
+      nodeElement.style.color = "white";
+      nodeElement.style.fontWeight = "bold";
+      nodeElement.style.display = "flex";
+      nodeElement.style.justifyContent = "center";
+      nodeElement.style.alignItems = "center";
+      nodeElement.style.transform = "scale(0.7)";
+      nodeElement.style.transition =
+        "background-color 0.5s ease, transform 0.3s ease";
       nodeElement.innerText = node.id;
       innerWrapper.appendChild(nodeElement);
 
@@ -150,10 +161,14 @@ function drawRecursionGraph(containerId, graph, speed = 500) {
 
   function drawParams(node, x, y) {
     const paramsElement = document.createElement("div");
-    paramsElement.classList.add("params-element");
+    paramsElement.style.position = "absolute";
     paramsElement.style.left = `${x + nodeSize / 2}px`;
     paramsElement.style.top = `${y + nodeSize + 10}px`;
-    paramsElement.style.color = activeColor;
+    paramsElement.style.transform = "translateX(-50%)";
+    paramsElement.style.height = "auto";
+    paramsElement.style.textAlign = "center";
+    paramsElement.style.color = "#8A9FEE";
+    paramsElement.style.whiteSpace = "nowrap";
 
     // Format params as "fn(param1, param2, ...)"
     const paramsText = `fn(${formatParams(node.params)})`;
@@ -167,14 +182,19 @@ function drawRecursionGraph(containerId, graph, speed = 500) {
       setTimeout(
         () => {
           const returnValueElement = document.createElement("div");
-          returnValueElement.classList.add("return-value-element");
-          // Apply xOffset if this node is an only child (so that the return value doesn't overlap with the vertical arrow)
+
+          // Apply xOffset if this node is an only child
           const xOffset = node.isOnlyChild ? 10 : 0;
 
+          returnValueElement.style.position = "absolute";
           returnValueElement.style.left = `${x + nodeSize / 2 + xOffset}px`;
           returnValueElement.style.top = `${y - 40}px`; // Adjusted to prevent overlap with arrow
+          returnValueElement.style.transform = "translateX(-50%)";
           returnValueElement.style.width = `${nodeSize}px`;
-          returnValueElement.style.color = returnColor; // Set return value color to orange
+          returnValueElement.style.height = "20px";
+          returnValueElement.style.textAlign = "center";
+          returnValueElement.style.color = "#DA7635"; // Set return value color to orange
+          returnValueElement.style.whiteSpace = "nowrap";
 
           // Format return value
           returnValueElement.innerText =
@@ -201,37 +221,27 @@ function drawRecursionGraph(containerId, graph, speed = 500) {
     let svg = innerWrapper.querySelector("svg");
     if (!svg) {
       svg = document.createElementNS(svgNS, "svg");
-      svg.classList.add("arrow");
-      svg.setAttribute("width", innerWrapper.scrollWidth * 100);
-      svg.setAttribute("height", innerWrapper.scrollHeight * 100);
-
+      svg.style.position = "absolute";
+      svg.style.left = "0";
+      svg.style.top = "0";
+      svg.style.width = "100%";
+      svg.style.height = "100%";
+      svg.style.pointerEvents = "none";
+      svg.setAttribute("width", innerWrapper.scrollWidth);
+      svg.setAttribute("height", innerWrapper.scrollHeight);
       innerWrapper.appendChild(svg);
     }
 
-    // Adjust the starting and ending points for a tighter arrow
-    const arrowOffsetX = (x2 - x1) * 0.15; // 15% offset for a tighter arrow
-    const arrowOffsetY = (y2 - y1) * 0.15; // 15% offset for a tighter arrow
+    const line = document.createElementNS(svgNS, "line");
+    line.setAttribute("x1", x1);
+    line.setAttribute("y1", y1);
+    line.setAttribute("x2", x2);
+    line.setAttribute("y2", y2);
+    line.setAttribute("stroke", "white");
+    line.setAttribute("stroke-width", "1");
+    line.setAttribute("marker-end", "url(#arrowhead)");
 
-    const startX = x1 + arrowOffsetX;
-    const startY = y1 + arrowOffsetY;
-    const endX = x2 - arrowOffsetX;
-    const endY = y2 - arrowOffsetY;
-
-    // Optionally add curvature by defining a control point for a quadratic Bezier curve
-    const controlX = (startX + endX) / 2;
-    const controlY = (startY + endY) / 2 - 20; // Move the control point slightly upwards for a gentle curve
-
-    const path = document.createElementNS(svgNS, "path");
-    path.setAttribute(
-      "d",
-      `M ${startX},${startY} Q ${controlX},${controlY} ${endX},${endY}`
-    ); // Quadratic Bezier curve path
-    path.setAttribute("stroke", "white");
-    path.setAttribute("stroke-width", "1");
-    path.setAttribute("fill", "none");
-    path.setAttribute("marker-end", "url(#arrowhead)");
-
-    svg.appendChild(path);
+    svg.appendChild(line);
 
     let defs = svg.querySelector("defs");
     if (!defs) {
@@ -247,11 +257,11 @@ function drawRecursionGraph(containerId, graph, speed = 500) {
       marker.setAttribute("orient", "auto");
       marker.setAttribute("markerUnits", "strokeWidth");
 
-      const arrowHeadPath = document.createElementNS(svgNS, "path");
-      arrowHeadPath.setAttribute("d", "M0,0 L0,7 L10,3.5 z");
-      arrowHeadPath.setAttribute("fill", "white");
+      const path = document.createElementNS(svgNS, "path");
+      path.setAttribute("d", "M0,0 L0,7 L10,3.5 z");
+      path.setAttribute("fill", "white");
 
-      marker.appendChild(arrowHeadPath);
+      marker.appendChild(path);
       defs.appendChild(marker);
     }
   }
@@ -272,7 +282,6 @@ function drawRecursionGraph(containerId, graph, speed = 500) {
   }
 
   // Set up zoom and pan functionality before drawing
-  // Panning variables
   let isPanning = false;
   let startX, startY;
   let currentScale = 1;
@@ -287,40 +296,29 @@ function drawRecursionGraph(containerId, graph, speed = 500) {
     updateTransform();
   });
 
-  // Mouse down and touch start
-  const startPan = (e) => {
+  container.addEventListener("mousedown", (e) => {
     isPanning = true;
-    const clientX = e.clientX || e.touches[0].clientX;
-    const clientY = e.clientY || e.touches[0].clientY;
-    startX = clientX - currentTranslateX;
-    startY = clientY - currentTranslateY;
+    startX = e.clientX - currentTranslateX;
+    startY = e.clientY - currentTranslateY;
     container.style.cursor = "grabbing";
-  };
+  });
 
-  // Mouse move and touch move
-  const movePan = (e) => {
+  container.addEventListener("mousemove", (e) => {
     if (!isPanning) return;
-    const clientX = e.clientX || e.touches[0].clientX;
-    const clientY = e.clientY || e.touches[0].clientY;
-    currentTranslateX = clientX - startX;
-    currentTranslateY = clientY - startY;
+    currentTranslateX = e.clientX - startX;
+    currentTranslateY = e.clientY - startY;
     updateTransform();
-  };
+  });
 
-  // Mouse up and touch end
-  const endPan = () => {
+  container.addEventListener("mouseup", () => {
     isPanning = false;
     container.style.cursor = "default";
-  };
+  });
 
-  // Add event listeners for both mouse and touch events
-  container.addEventListener("mousedown", startPan);
-  container.addEventListener("mousemove", movePan);
-  container.addEventListener("mouseup", endPan);
-  container.addEventListener("mouseleave", endPan);
-  container.addEventListener("touchstart", startPan, { passive: true });
-  container.addEventListener("touchmove", movePan, { passive: true });
-  container.addEventListener("touchend", endPan);
+  container.addEventListener("mouseleave", () => {
+    isPanning = false;
+    container.style.cursor = "default";
+  });
 
   function updateTransform() {
     innerWrapper.style.transform = `translate(${currentTranslateX}px, ${currentTranslateY}px) scale(${currentScale})`;
@@ -345,6 +343,19 @@ function drawRecursionGraph(containerId, graph, speed = 500) {
     innerWrapper.style.width = `${totalWidth}px`;
     innerWrapper.style.height = `${totalHeight}px`;
 
+    // Calculate the initial scale to fit the innerWrapper within the container
+    const containerRect = container.getBoundingClientRect();
+    const scaleX = containerRect.width / totalWidth;
+    const scaleY = containerRect.height / totalHeight;
+    const scale = Math.min(scaleX, scaleY, 1); // Don't upscale if content is smaller
+
+    // Apply initial scaling
+    currentScale = scale;
+    updateTransform();
+
+    // Center the innerWrapper
+    currentTranslateX = (containerRect.width - totalWidth * currentScale) / 2;
+    currentTranslateY = (containerRect.height - totalHeight * currentScale) / 2;
     updateTransform();
 
     // Update positions with offsetX set to zero since we're centering via CSS
