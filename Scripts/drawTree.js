@@ -272,23 +272,18 @@ function drawRecursionGraph(containerId, graph, speed = 500) {
   }
 
   // Set up zoom and pan functionality before drawing
-  // Panning variables
+  // Panning and zoom variables
   let isPanning = false;
   let startX, startY;
   let currentScale = 1;
   let currentTranslateX = 0;
   let currentTranslateY = 0;
+  let initialDistance = null;
 
-  container.addEventListener("wheel", (e) => {
-    e.preventDefault();
-    const delta = -e.deltaY * 0.001;
-    currentScale += delta;
-    currentScale = Math.min(Math.max(0.1, currentScale), 5);
-    updateTransform();
-  });
-
-  // Mouse down and touch start
+  // Panning - prevent scrolling on the main page during panning
   const startPan = (e) => {
+    e.preventDefault(); // Prevent default to stop page scrolling
+
     isPanning = true;
     const clientX = e.clientX || e.touches[0].clientX;
     const clientY = e.clientY || e.touches[0].clientY;
@@ -297,9 +292,11 @@ function drawRecursionGraph(containerId, graph, speed = 500) {
     container.style.cursor = "grabbing";
   };
 
-  // Mouse move and touch move
   const movePan = (e) => {
     if (!isPanning) return;
+
+    e.preventDefault(); // Prevent default to stop page scrolling
+
     const clientX = e.clientX || e.touches[0].clientX;
     const clientY = e.clientY || e.touches[0].clientY;
     currentTranslateX = clientX - startX;
@@ -307,20 +304,57 @@ function drawRecursionGraph(containerId, graph, speed = 500) {
     updateTransform();
   };
 
-  // Mouse up and touch end
   const endPan = () => {
     isPanning = false;
     container.style.cursor = "default";
   };
+
+  // Pinch-to-zoom - calculates the scale based on the distance between two touch points
+  const handlePinchZoom = (e) => {
+    if (e.touches.length === 2) {
+      e.preventDefault(); // Prevent default to stop page scrolling
+
+      const touch1 = e.touches[0];
+      const touch2 = e.touches[1];
+
+      const distance = Math.sqrt(
+        (touch1.clientX - touch2.clientX) ** 2 +
+          (touch1.clientY - touch2.clientY) ** 2
+      );
+
+      if (initialDistance === null) {
+        initialDistance = distance; // Set initial distance for the pinch gesture
+      } else {
+        const scaleChange = distance / initialDistance;
+        currentScale = Math.min(Math.max(currentScale * scaleChange, 0.1), 5); // Keep scale between 0.1 and 5
+        initialDistance = distance; // Update initial distance
+        updateTransform();
+      }
+    }
+  };
+
+  const endPinchZoom = () => {
+    initialDistance = null; // Reset initial distance
+  };
+
+  // Update the transform style to apply pan and zoom
+  function updateTransform() {
+    innerWrapper.style.transform = `translate(${currentTranslateX}px, ${currentTranslateY}px) scale(${currentScale})`;
+  }
 
   // Add event listeners for both mouse and touch events
   container.addEventListener("mousedown", startPan);
   container.addEventListener("mousemove", movePan);
   container.addEventListener("mouseup", endPan);
   container.addEventListener("mouseleave", endPan);
-  container.addEventListener("touchstart", startPan, { passive: true });
-  container.addEventListener("touchmove", movePan, { passive: true });
+  container.addEventListener("touchstart", startPan, { passive: false });
+  container.addEventListener("touchmove", movePan, { passive: false });
   container.addEventListener("touchend", endPan);
+
+  // Add pinch-to-zoom event listeners for touch devices
+  container.addEventListener("touchmove", handlePinchZoom, { passive: false });
+  container.addEventListener("touchend", endPinchZoom);
+  container.addEventListener("touchcancel", endPinchZoom);
 
   function updateTransform() {
     innerWrapper.style.transform = `translate(${currentTranslateX}px, ${currentTranslateY}px) scale(${currentScale})`;
