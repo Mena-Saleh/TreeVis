@@ -2,8 +2,8 @@
 const container = document.getElementById("visualizer");
 
 // Colors
-activeColor = "#6699CC";
-returnColor = "#F9C784";
+activeColor = "#4EB7F9";
+returnColor = "#FEB95F";
 
 // Create a text display element above the graph
 const textDisplay = document.createElement("div");

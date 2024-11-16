@@ -11,7 +11,7 @@ const algorithms = {
   }
   return n * fn(n - 1);
 }`,
-  MergeSort: `function fn(arr = [5, 2, 9, 1, 5, 6]) {
+  "Merge Sort": `function fn(arr = [5, 2, 9, 1, 5, 6]) {
     if (arr.length <= 1){
     return arr;
     }
@@ -37,20 +37,30 @@ function merge(left, right) {
 
     return result.concat(left.slice(i)).concat(right.slice(j));
 }`,
-  LongestCommonSubsequence: `str1 = "ABC";
-str2 = "AEB";
-function fn( m = str1.length, n = str2.length) {
+  "Longest Common Subsequence (Memoized)": `var str1 = "ABC";
+var str2 = "AEB";
+var memo = {}; 
+
+function fn(m = str1.length, n = str2.length) {
+    let key = m + "," + n;
+
     if (m === 0 || n === 0){
     return 0;
     }
-    if (str1[m - 1] === str2[n - 1]) {
-        return 1 + fn(m - 1, n - 1);
-    } else {
-        return Math.max(fn(m - 1, n), fn(m, n - 1));
+
+    if (key in memo){
+    return memo[key];
     }
-}
-`,
-  QuickSort: `function fn(arr = [3, 6, 8, 10, 1, 2, 1]) {
+
+    if (str1[m - 1] === str2[n - 1]) {
+        memo[key] = 1 + fn(m - 1, n - 1);
+    } else {
+        memo[key] = Math.max(fn(m - 1, n), fn(m, n - 1));
+    }
+
+    return memo[key];
+}`,
+  "Quick Sort": `function fn(arr = [3, 6, 8, 10, 1, 2, 1]) {
     if (arr.length <= 1) {
         return arr;
     }
@@ -72,7 +82,7 @@ function fn( m = str1.length, n = str2.length) {
 
     return sortedLeft.concat([pivot], sortedRight);
 }`,
-  FibonacciMemo: `const memo = {};
+  "Fibonacci (Memoized)": `const memo = {};
 function fn(n = 5) {
   if (n in memo) {
     return memo[n];
@@ -86,7 +96,7 @@ function fn(n = 5) {
   memo[n] = fn(n - 1) + fn(n - 2);
   return memo[n];
 }`,
-  BinarySearch: `function fn(arr = [1, 3, 5, 7, 9, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100], target = 9, offset = 0) {
+  "Binary Search": `function fn(arr = [1, 3, 5, 7, 9, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100], target = 9, offset = 0) {
   if (arr.length === 0) {
     return -1;
   }
@@ -107,7 +117,7 @@ function fn(n = 5) {
     return result !== -1 ? result : -1;
   }
 }`,
-  TowerOfHanoi: `function fn(disks = 3, source = 'A', target = 'C', auxiliary = 'B') {
+  "Tower Of Hanoi": `function fn(disks = 3, source = 'A', target = 'C', auxiliary = 'B') {
   if (disks === 1) {
     console.log(\`Move disk 1 from \${source} to \${target}\`);
     return;
@@ -124,7 +134,7 @@ function fn(n = 5) {
 
   return fn(b, a % b);
 }`,
-  PalindromePartitioning: `function fn(str = "aab", start = 0) {
+  "Palindrome Partitioning": `function fn(str = "aab", start = 0) {
   if (start >= str.length) {
     return [[]];
   }
