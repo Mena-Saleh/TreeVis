@@ -184,18 +184,19 @@ footer a:hover {
   margin-top: 20px;
 }
 
+.tree-wrapper {
+  transform-origin: 0 0;
+  position: relative;
+  overflow: visible;
+}
+
 .text-display {
   color: white;
   font-size: 1.2rem;
   font-weight: bold;
   margin-bottom: 20px;
-  z-index: 200l;
 }
 
-.tree-wrapper {
-  margin-right: 7%;
-  transform-origin: 0 0;
-}
 .node-element {
   position: absolute;
   border-radius: 50%;
@@ -231,6 +232,7 @@ footer a:hover {
   max-height: "auto";
   max-width: "auto";
   pointer-events: "none";
+  overflow: visible;
 }
 svg {
   display: flex;
@@ -264,7 +266,7 @@ svg {
   }
 
   .visualizer-container {
-    min-height: 80vh;
+    height: 80vh;
   }
 
   .side-bar {

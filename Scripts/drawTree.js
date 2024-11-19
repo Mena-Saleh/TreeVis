@@ -216,8 +216,8 @@ function drawArrow(x1, y1, x2, y2) {
   if (!svg) {
     svg = document.createElementNS(svgNS, "svg");
     svg.classList.add("arrow");
-    svg.setAttribute("width", treeWrapper.scrollWidth * 100);
-    svg.setAttribute("height", treeWrapper.scrollHeight * 100);
+    svg.setAttribute("width", treeWrapper.scrollWidth);
+    svg.setAttribute("height", treeWrapper.scrollHeight);
 
     treeWrapper.appendChild(svg);
   }
@@ -430,13 +430,18 @@ const drawRecursionGraph = async (graph) => {
   const totalWidth = nextX * (nodeSize + horizontalSpacing);
   const totalHeight = (maxDepth + 1) * (nodeSize + verticalSpacing);
 
-  // Set the size of the innerWrapper
+  // Set the size of the treeWrapper
   treeWrapper.style.width = `${totalWidth}px`;
   treeWrapper.style.height = `${totalHeight}px`;
 
-  updateTransform();
+  // Calculate the offset to center the root node
+  // The root node is at depth 0, so its yPosition is 0
+  // To center it horizontally, we place it at half of totalWidth minus half of nodeSize
+  const rootXPosition = rootNode.x * (nodeSize + horizontalSpacing);
+  const offsetX = totalWidth / 2 - nodeSize / 2 - rootXPosition;
 
-  // Update positions with offsetX set to zero since we're centering via CSS
-  updatePositions(rootNode, 0);
+  // Update positions with the calculated offsetX
+  updatePositions(rootNode, offsetX);
+
   await drawNode(rootNode);
 };

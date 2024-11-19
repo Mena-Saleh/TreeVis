@@ -44,15 +44,20 @@ runButton.addEventListener("click", async () => {
   }
 
   const code = codeEditor.getValue();
-  const modifiedCode = modifyRecursiveFunction(code);
-  const recursionTree = createAndCallModifiedFunction(modifiedCode);
 
-  if (!recursionTree) {
+  // Annotate the code and build recursion graph
+  const modifiedCode = modifyRecursiveFunction(code);
+  const recursionGraph = createAndCallModifiedFunction(modifiedCode);
+
+  // Notify if there is errors creating the graph or compiling the code
+  if (!recursionGraph) {
     Swal.fire("Compilation Error", "Error creating recursion tree.", "error");
     return;
   }
 
-  if (recursionTree["nodes"].length > 100) {
+  // Notify if graph is too large
+  console.log(recursionGraph["nodes"].length);
+  if (recursionGraph["nodes"].length > 40) {
     Swal.fire(
       "Drawing Error",
       "Tree is too large, try reducing the size of the parameters",
@@ -65,10 +70,10 @@ runButton.addEventListener("click", async () => {
   treeWrapper.innerHTML = ""; // Clear the tree container
   isDrawing = true;
 
+  // Draw the tree
   try {
-    await drawRecursionGraph(recursionTree); // Draw the tree
+    await drawRecursionGraph(recursionGraph); // Draw the tree
   } catch (error) {
-    console.error("Error during drawing:", error);
     Swal.fire("Error", "An error occurred while drawing the tree.", "error");
   } finally {
     isDrawing = false; // Reset the drawing flag
