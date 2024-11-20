@@ -56,8 +56,7 @@ runButton.addEventListener("click", async () => {
   }
 
   // Notify if graph is too large
-  console.log(recursionGraph["nodes"].length);
-  if (recursionGraph["nodes"].length > 40) {
+  if (recursionGraph["nodes"].length > 200) {
     Swal.fire(
       "Drawing Error",
       "Tree is too large, try reducing the size of the parameters",
