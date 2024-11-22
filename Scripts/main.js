@@ -1,6 +1,8 @@
 // Get DOM elements
 const select = document.querySelector("#algorithm-select");
 const runButton = document.querySelector(".run-button");
+
+// Initialize CodeMirror's text editor
 const codeEditor = CodeMirror.fromTextArea(
   document.getElementById("code-editor"),
   {
@@ -34,6 +36,7 @@ select.addEventListener("change", function () {
 let isDrawing = false; // Track if the tree is currently being drawn
 
 runButton.addEventListener("click", async () => {
+  // Notify that a drawing is in progress if any
   if (isDrawing) {
     swal.fire(
       "Warning",
@@ -43,6 +46,7 @@ runButton.addEventListener("click", async () => {
     return;
   }
 
+  // Get the code string to visualize
   const code = codeEditor.getValue();
 
   // Annotate the code and build recursion graph
@@ -65,8 +69,7 @@ runButton.addEventListener("click", async () => {
     return;
   }
 
-  // Reset the tree and set the drawing flag
-  treeWrapper.innerHTML = ""; // Clear the tree container
+  // Set the drawing flag
   isDrawing = true;
 
   // Draw the tree

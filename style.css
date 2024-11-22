@@ -174,7 +174,6 @@ footer a:hover {
 /* Recursion tree */
 #visualizer {
   position: relative;
-  overflow: hidden;
   width: 100%;
   height: 100%;
   display: flex;

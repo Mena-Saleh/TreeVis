@@ -1,13 +1,13 @@
-// Global variables and elements
+// Global configuration for visualization
 const container = document.getElementById("visualizer");
-const activeColor = "#4EB7F9";
-const returnColor = "#FEB95F";
-const nodeSize = 40;
-const horizontalSpacing = 40;
-const verticalSpacing = 80;
-const speed = 500;
+const activeColor = "#4EB7F9"; // Blue color for active nodes
+const returnColor = "#FEB95F"; // Orange color for returned nodes
+const nodeSize = 40; // Size of each node in pixels
+const horizontalSpacing = 40; // Horizontal space between nodes
+const verticalSpacing = 80; // Vertical space between node levels
+const speed = 500; // Animation time in milliseconds
 
-// Create DOM elements once
+// Create text display and tree wrapper elements
 const textDisplay = document.createElement("div");
 textDisplay.classList.add("text-display");
 container.appendChild(textDisplay);
@@ -16,55 +16,69 @@ const treeWrapper = document.createElement("div");
 treeWrapper.classList.add("tree-wrapper");
 container.appendChild(treeWrapper);
 
-// State variables
-let drawnNodes = 0;
-let nextX = 0;
-let maxDepth = 0;
-let totalNodes = 0;
-let currentScale = 1;
-let currentTranslateX = 0;
-let currentTranslateY = 0;
-let isPanning = false;
-let startXPan, startYPan;
-let initialDistance = null;
+// Initialize state variables for tree visualization
+let drawnNodes = 0; // Counter for drawn nodes
+let nextX = 0; // Horizontal position tracker
+let maxDepth = 0; // Maximum depth of the tree
+let totalNodes = 0; // Total number of nodes in the tree
 
-// Cache DOM elements
+// Initialize Panzoom for interactive zooming and panning
+const panzoomInstance = Panzoom(container, {
+  maxScale: 10,
+  minScale: 0.01,
+  step: 0.2,
+});
+container.addEventListener("wheel", panzoomInstance.zoomWithWheel);
+treeWrapper.addEventListener("touchstart", panzoomInstance.handleTouch, {
+  passive: false,
+});
+
+// Get DOM elements
 const progressBar = document.getElementById("progress-bar");
 
-// Helper functions with performance optimizations
+// Progress bar utility functions
 const resetProgressBar = () => (progressBar.style.width = "0%");
-
 const updateProgressBar = (drawn, total) => {
   progressBar.style.width = `${(drawn / total) * 100}%`;
 };
 
+// Assign horizontal and vertical positions to nodes in the tree
 const assignPositions = (node, depth) => {
-  node.y = depth;
+  node.y = depth; // Set vertical position (depth)
   maxDepth = Math.max(maxDepth, depth);
 
   if (!node.children.length) {
+    // For leaf nodes, assign next available horizontal position
     node.x = nextX++;
     return;
   }
 
+  // For nodes with children, process each child
   node.children.forEach((child) => {
+    // Mark if node is the only child of its parent
     child.isOnlyChild = node.children.length === 1;
     assignPositions(child, depth + 1);
   });
 
+  // Center the node based on its children's positions
   node.x = (node.children[0].x + node.children[node.children.length - 1].x) / 2;
 };
 
+// Update node positions with offset for centering
 const updatePositions = (node, offsetX) => {
+  // Calculate exact pixel positions considering spacing
   node.xPosition = node.x * (nodeSize + horizontalSpacing) + offsetX;
   node.yPosition = node.y * (nodeSize + verticalSpacing);
+
+  // Recursively update child node positions
   node.children.forEach((child) => updatePositions(child, offsetX));
 };
 
-// Optimized drawing functions
+// Draw individual node element with animation
 const drawNodeElement = (node, x, y, color = "transparent") => {
   return new Promise((resolve) => {
     const nodeElement = document.createElement("div");
+    // Set node styling and position
     Object.assign(nodeElement.style, {
       left: `${x}px`,
       top: `${y}px`,
@@ -73,38 +87,51 @@ const drawNodeElement = (node, x, y, color = "transparent") => {
       backgroundColor: color,
     });
     nodeElement.classList.add("node-element");
+    // Add unique identifier for later selection
+    nodeElement.setAttribute("data-node-id", node.id);
     nodeElement.innerText = node.id;
     treeWrapper.appendChild(nodeElement);
 
-    // Use requestAnimationFrame for smoother animations
+    // Pulse animation for node drawing
     requestAnimationFrame(() => {
       nodeElement.style.transform = "scale(1.3)";
       setTimeout(() => {
         nodeElement.style.transform = "scale(1.0)";
         resolve();
-      }, 150);
+      }, speed / 2.5);
     });
   });
 };
 
-const setNodeColor = (node, x, y, color) => {
+// Change node color with return animation
+const setNodeColor = (node, color) => {
   return new Promise((resolve) => {
+    // Find node by its unique ID
     const nodeElement = treeWrapper.querySelector(
-      `div[style*="left: ${x}px"][style*="top: ${y}px"]`
+      `.node-element[data-node-id="${node.id}"]`
     );
     if (nodeElement) {
+      // Pulse and color change animation
       nodeElement.style.backgroundColor = color;
+      nodeElement.style.transform = "scale(1.3)";
+
       setTimeout(() => {
-        nodeElement.style.backgroundColor = "transparent";
-        resolve();
-      }, 500);
+        // Return to normal size
+        nodeElement.style.transform = "scale(1.0)";
+
+        // Fade to transparent
+        setTimeout(() => {
+          nodeElement.style.backgroundColor = "transparent";
+          resolve();
+        }, speed / 3.5);
+      }, speed / 2);
     } else {
       resolve();
     }
   });
 };
 
-// Optimized formatting functions
+// Utility functions for formatting parameters and return values
 const formatParams = (params) =>
   Object.values(params)
     .map((value) => (Array.isArray(value) ? `[${value}]` : value))
@@ -113,13 +140,14 @@ const formatParams = (params) =>
 const formatReturnValue = (returnValue) =>
   Array.isArray(returnValue) ? `[${returnValue}]` : returnValue;
 
+// Update text display with current operation
 const updateTextDisplay = (text, color) => {
   textDisplay.innerText = text;
   textDisplay.style.color = color;
 };
 
-// Optimized SVG handling
-const createSVG = () => {
+// Create SVG for drawing arrows between nodes
+const createArrowSVG = () => {
   const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
   svg.classList.add("arrow");
   svg.setAttribute("width", treeWrapper.scrollWidth);
@@ -152,7 +180,7 @@ const createSVG = () => {
   return svg;
 };
 
-// Drawing functions
+// Draw parameters below the node
 const drawParams = (node, x, y) => {
   const paramsElement = document.createElement("div");
   Object.assign(paramsElement.style, {
@@ -165,6 +193,7 @@ const drawParams = (node, x, y) => {
   treeWrapper.appendChild(paramsElement);
 };
 
+// Draw return value above the node
 const drawReturnValue = (node, x, y) => {
   return new Promise((resolve) => {
     setTimeout(
@@ -172,6 +201,7 @@ const drawReturnValue = (node, x, y) => {
         const returnValueElement = document.createElement("div");
         const xOffset = node.isOnlyChild ? 10 : 0;
 
+        // Style return value display
         Object.assign(returnValueElement.style, {
           left: `${x + nodeSize / 2 + xOffset}px`,
           top: `${y - 40}px`,
@@ -187,6 +217,7 @@ const drawReturnValue = (node, x, y) => {
 
         treeWrapper.appendChild(returnValueElement);
 
+        // Fade in return value
         requestAnimationFrame(() => {
           returnValueElement.style.opacity = "1";
           resolve();
@@ -197,12 +228,14 @@ const drawReturnValue = (node, x, y) => {
   });
 };
 
+// Draw curved arrow between parent and child nodes
 const drawArrow = (x1, y1, x2, y2) => {
-  let svg = treeWrapper.querySelector("svg") || createSVG();
+  let svg = treeWrapper.querySelector("svg") || createArrowSVG();
   if (!svg.parentNode) {
     treeWrapper.appendChild(svg);
   }
 
+  // Calculate arrow path with slight curve
   const arrowOffsetX = (x2 - x1) * 0.15;
   const arrowOffsetY = (y2 - y1) * 0.15;
   const startX = x1 + arrowOffsetX;
@@ -212,6 +245,7 @@ const drawArrow = (x1, y1, x2, y2) => {
   const controlX = (startX + endX) / 2;
   const controlY = (startY + endY) / 2 - 20;
 
+  // Create curved SVG path
   const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
   path.setAttribute(
     "d",
@@ -225,13 +259,13 @@ const drawArrow = (x1, y1, x2, y2) => {
   svg.appendChild(path);
 };
 
-// Main drawing function
+// Main node drawing function - recursively visualizes tree
 const drawNode = async (node, parent = null) => {
   await new Promise((resolve) => {
     setTimeout(async () => {
       const { xPosition: x, yPosition: y } = node;
 
-      // If there's a parent, draw the arrow BEFORE drawing the child node
+      // Draw connecting arrow if node has a parent
       if (parent) {
         const { xPosition: parentX, yPosition: parentY } = parent;
         drawArrow(
@@ -242,23 +276,29 @@ const drawNode = async (node, parent = null) => {
         );
       }
 
+      // Update text display for current function call
       updateTextDisplay(
         `Calling fn(${formatParams(node.params)})`,
         activeColor
       );
-      await drawNodeElement(node, x, y, activeColor);
 
+      // Draw node and track progress
+      await drawNodeElement(node, x, y, activeColor);
       drawnNodes++;
       updateProgressBar(drawnNodes, totalNodes);
 
+      // Draw function parameters
       drawParams(node, x, y);
 
+      // Recursively draw child nodes
       for (const child of node.children) {
         await drawNode(child, node);
       }
 
+      // Draw return value
       await drawReturnValue(node, x, y);
 
+      // Update text display for function return
       updateTextDisplay(
         `fn(${formatParams(node.params)}) returns ${formatReturnValue(
           node.returnValue
@@ -266,96 +306,16 @@ const drawNode = async (node, parent = null) => {
         returnColor
       );
 
-      await setNodeColor(node, x, y, returnColor);
+      // Animate node color change on return
+      await setNodeColor(node, returnColor);
       resolve();
     }, speed);
   });
 };
 
-// Event handlers
-const updateTransform = () => {
-  treeWrapper.style.transform = `translate(${currentTranslateX}px, ${currentTranslateY}px) scale(${currentScale})`;
-};
-
-const startPan = (e) => {
-  e.preventDefault();
-  isPanning = true;
-  const clientX = e.clientX || (e.touches && e.touches[0].clientX);
-  const clientY = e.clientY || (e.touches && e.touches[0].clientY);
-  startXPan = clientX - currentTranslateX;
-  startYPan = clientY - currentTranslateY;
-  container.style.cursor = "grabbing";
-};
-
-const movePan = (e) => {
-  if (!isPanning) return;
-  e.preventDefault();
-  const clientX = e.clientX || (e.touches && e.touches[0].clientX);
-  const clientY = e.clientY || (e.touches && e.touches[0].clientY);
-  currentTranslateX = clientX - startXPan;
-  currentTranslateY = clientY - startYPan;
-  updateTransform();
-};
-
-const endPan = () => {
-  isPanning = false;
-  container.style.cursor = "default";
-};
-
-const handlePinchZoom = (e) => {
-  if (e.touches.length !== 2) return;
-  e.preventDefault();
-
-  const touch1 = e.touches[0];
-  const touch2 = e.touches[1];
-  const distance = Math.hypot(
-    touch1.clientX - touch2.clientX,
-    touch1.clientY - touch2.clientY
-  );
-
-  if (initialDistance === null) {
-    initialDistance = distance;
-    return;
-  }
-
-  const scaleChange = distance / initialDistance;
-  currentScale = Math.min(Math.max(currentScale * scaleChange, 0.1), 5);
-  initialDistance = distance;
-  updateTransform();
-};
-
-const handleWheelZoom = (e) => {
-  e.preventDefault();
-  const zoomSensitivity = 0.001;
-  const scaleChange = 1 - e.deltaY * zoomSensitivity;
-  const newScale = currentScale * scaleChange;
-  currentScale = Math.min(Math.max(newScale, 0.1), 5);
-
-  const rect = container.getBoundingClientRect();
-  const offsetX = e.clientX - rect.left - currentTranslateX;
-  const offsetY = e.clientY - rect.top - currentTranslateY;
-
-  currentTranslateX -= offsetX * (scaleChange - 1);
-  currentTranslateY -= offsetY * (scaleChange - 1);
-
-  updateTransform();
-};
-
-// Event listeners
-container.addEventListener("mousedown", startPan);
-container.addEventListener("mousemove", movePan);
-container.addEventListener("mouseup", endPan);
-container.addEventListener("mouseleave", endPan);
-container.addEventListener("touchstart", startPan, { passive: false });
-container.addEventListener("touchmove", movePan, { passive: false });
-container.addEventListener("touchend", endPan);
-container.addEventListener("touchmove", handlePinchZoom, { passive: false });
-container.addEventListener("touchend", () => (initialDistance = null));
-container.addEventListener("touchcancel", () => (initialDistance = null));
-container.addEventListener("wheel", handleWheelZoom, { passive: false });
-
-// Main drawing function
+// Main function to draw entire recursion graph
 const drawRecursionGraph = async (graph) => {
+  // Clear previous visualization
   treeWrapper.innerHTML = "";
   resetProgressBar();
 
@@ -364,25 +324,31 @@ const drawRecursionGraph = async (graph) => {
     return;
   }
 
+  // Initialize drawing parameters
   const rootNode = graph.nodes[0];
   nextX = 0;
   maxDepth = 0;
   drawnNodes = 0;
   totalNodes = graph.nodes.length;
 
+  // Calculate node positions
   assignPositions(rootNode, 0);
 
+  // Determine total tree dimensions
   const totalWidth = nextX * (nodeSize + horizontalSpacing);
   const totalHeight = (maxDepth + 1) * (nodeSize + verticalSpacing);
 
+  // Set tree wrapper dimensions
   Object.assign(treeWrapper.style, {
     width: `${totalWidth}px`,
     height: `${totalHeight}px`,
   });
 
+  // Center the tree
   const rootXPosition = rootNode.x * (nodeSize + horizontalSpacing);
   const offsetX = totalWidth / 2 - nodeSize / 2 - rootXPosition;
 
+  // Update node positions and start drawing
   updatePositions(rootNode, offsetX);
   await drawNode(rootNode);
 };
