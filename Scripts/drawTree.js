@@ -1,5 +1,6 @@
 // Global configuration for visualization
-const container = document.getElementById("visualizer");
+const visualizerContainer = document.getElementById("visualizer-container");
+const visualizer = document.getElementById("visualizer");
 const activeColor = "#4EB7F9"; // Blue color for active nodes
 const returnColor = "#FEB95F"; // Orange color for returned nodes
 const nodeSize = 40; // Size of each node in pixels
@@ -10,11 +11,11 @@ const speed = 500; // Animation time in milliseconds
 // Create text display and tree wrapper elements
 const textDisplay = document.createElement("div");
 textDisplay.classList.add("text-display");
-container.appendChild(textDisplay);
+visualizer.appendChild(textDisplay);
 
 const treeWrapper = document.createElement("div");
 treeWrapper.classList.add("tree-wrapper");
-container.appendChild(treeWrapper);
+visualizer.appendChild(treeWrapper);
 
 // Initialize state variables for tree visualization
 let drawnNodes = 0; // Counter for drawn nodes
@@ -23,15 +24,20 @@ let maxDepth = 0; // Maximum depth of the tree
 let totalNodes = 0; // Total number of nodes in the tree
 
 // Initialize Panzoom for interactive zooming and panning
-const panzoomInstance = Panzoom(container, {
+const panzoomInstance = Panzoom(visualizer, {
   maxScale: 10,
   minScale: 0.01,
   step: 0.2,
+  canvas: true,
 });
-container.addEventListener("wheel", panzoomInstance.zoomWithWheel);
-treeWrapper.addEventListener("touchstart", panzoomInstance.handleTouch, {
-  passive: false,
-});
+visualizerContainer.addEventListener("wheel", panzoomInstance.zoomWithWheel);
+visualizerContainer.addEventListener(
+  "touchstart",
+  panzoomInstance.handleTouch,
+  {
+    passive: false,
+  }
+);
 
 // Get DOM elements
 const progressBar = document.getElementById("progress-bar");
