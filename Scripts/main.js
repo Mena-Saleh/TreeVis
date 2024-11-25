@@ -35,7 +35,9 @@ select.addEventListener("change", function () {
 
 let isDrawing = false; // Track if the tree is currently being drawn
 
-runButton.addEventListener("click", async () => {
+runButton.addEventListener("click", async (event) => {
+  event.preventDefault();
+
   // Notify that a drawing is in progress if any
   if (isDrawing) {
     swal.fire(

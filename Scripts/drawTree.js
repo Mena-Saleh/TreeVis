@@ -25,9 +25,9 @@ let totalNodes = 0; // Total number of nodes in the tree
 
 // Initialize Panzoom for interactive zooming and panning
 const panzoomInstance = Panzoom(visualizer, {
-  maxScale: 10,
-  minScale: 0.01,
-  step: 0.2,
+  maxScale: 3,
+  minScale: 0.2,
+  step: 0.1,
   canvas: true,
 });
 visualizerContainer.addEventListener("wheel", panzoomInstance.zoomWithWheel);
