@@ -9,9 +9,9 @@ const codeEditor = CodeMirror.fromTextArea(
         mode: "javascript",
         lineNumbers: true,
         theme: "monokai",
-        tabSize: 2,
-        indentUnit: 2,
-        indentWithTabs: false,
+        tabSize: 4,
+        indentUnit: 4,
+        indentWithTabs: true,
         lineWrapping: true,
     }
 );
@@ -37,6 +37,7 @@ let isDrawing = false; // Track if the tree is currently being drawn
 
 runButton.addEventListener("click", async (event) => {
     event.preventDefault();
+    event.stopPropagation();
 
     // Notify that a drawing is in progress if any
     if (isDrawing) {

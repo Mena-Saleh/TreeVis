@@ -145,8 +145,22 @@ function updateFunctionParameters(code) {
     });
 }
 
+// Modify one-line if statements by adding braces
+function modifyOneLineIfStatements(code) {
+    // Regex to match one-line if statements without braces
+    const regex = /if\s*\(([^)]+)\)\s*([^{;\n][^\n;]*)/g;
+
+    return code.replace(regex, (match, condition, statement) => {
+        // Only wrap if it's a single-line statement and not already wrapped
+        return `if (${condition}) { ${statement.trim()} }`;
+    });
+}
+
 // Instrument the recursive function to track its execution
 function modifyRecursiveFunction(code) {
+    code = modifyOneLineIfStatements(code);
+    console.log(code);
+
     // Update function parameters to include tracking
     code = updateFunctionParameters(code);
     const functionName = "fn";
