@@ -9,7 +9,7 @@
 }
 
 .main-container {
-    background-color: #191516;
+    background-color: #121212;
     height: 100vh;
     display: flex;
     padding: 15px;
@@ -112,7 +112,7 @@ footer p {
     color: #e6e8e6;
 }
 footer i {
-    color: #b93e3e;
+    color: #4eb7f9;
 }
 footer a {
     color: #e6e8e6;
@@ -142,7 +142,7 @@ footer a:hover {
 }
 
 .control-bar .run-button {
-    background-color: #4caf50;
+    background-color: #2e8b57;
     color: white;
     border: none;
     padding: 5px 10px;
@@ -151,7 +151,7 @@ footer a:hover {
     transition: 0.3s;
 }
 .run-button:hover {
-    background-color: #2c6b2f;
+    background-color: #2e8b5788;
     transition: 0.3s;
 }
 
@@ -168,7 +168,7 @@ footer a:hover {
 .progress-bar {
     height: 100%;
     width: 0;
-    background-color: #4caf50;
+    background-color: #2e8b57;
     transition: 0.5s;
 }
 
@@ -194,7 +194,7 @@ footer a:hover {
     color: white;
     font-size: 1.2rem;
     font-weight: bold;
-    margin-bottom: 20px;
+    margin-bottom: 70px;
 }
 
 .node-element {
@@ -203,6 +203,7 @@ footer a:hover {
     border: 2px solid white;
     color: white;
     font-weight: bold;
+    font-size: 14px;
     display: flex;
     justify-content: center;
     align-items: center;

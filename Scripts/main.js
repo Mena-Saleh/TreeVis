@@ -8,10 +8,10 @@ const codeEditor = CodeMirror.fromTextArea(
     {
         mode: "javascript",
         lineNumbers: true,
-        theme: "monokai",
+        theme: "railscasts",
         tabSize: 2,
         indentUnit: 2,
-        indentWithTabs: false,
+        indentWithTabs: true,
         lineWrapping: true,
     }
 );

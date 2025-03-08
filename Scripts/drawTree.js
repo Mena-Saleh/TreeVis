@@ -2,7 +2,7 @@
 const visualizerContainer = document.getElementById("visualizer-container");
 const visualizer = document.getElementById("visualizer");
 const activeColor = "#4EB7F9"; // Blue color for active nodes
-const returnColor = "#FEB95F"; // Orange color for returned nodes
+const returnColor = "#F4C87A"; // Orange color for returned nodes
 const nodeSize = 40; // Size of each node in pixels
 const horizontalSpacing = 40; // Horizontal space between nodes
 const verticalSpacing = 80; // Vertical space between node levels
