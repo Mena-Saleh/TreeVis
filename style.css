@@ -1,279 +1,328 @@
-* {
-    margin: 0;
-    padding: 0;
-    font-family: "Open Sans", sans-serif;
-    /* font-optical-sizing: auto;
-  font-weight: <weight>;
-  font-style: normal;
-  font-variation-settings: "wdth" 100; */
-}
+ /* Themes */
 
-.main-container {
-    background-color: #121212;
-    height: 100vh;
-    display: flex;
-    padding: 15px;
-    box-sizing: border-box;
-    justify-content: space-around;
-}
-.container {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
+ :root {
+     --navy-1: #101619;
+     --navy-2: #182024;
+     --white: #f9f9f9;
+     --blue-1: #008DD5;
+     --blue-2: #0D3B66;
+     --red: #e15656;
+     --green-1: #3ca534;
+     --green-2: #23641f;
+     --grey-1: #555555;
+ }
 
-/* Side bar */
+ * {
+     margin: 0;
+     padding: 0;
+     font-family: "Quicksand", sans-serif;
+     font-weight: 500;
+     font-style: normal;
+ }
 
-.side-bar {
-    background-color: #99858811;
-    border-radius: 10px;
-    height: 100%;
-    width: 25%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-evenly;
-}
-.side-bar img {
-    margin-top: 10px;
-    width: 40%;
-    cursor: pointer;
-}
+ .main-container {
+     background-color: var(--navy-1);
+     height: 100vh;
+     display: flex;
+     padding: 15px;
+     box-sizing: border-box;
+     justify-content: space-around;
+ }
 
-.side-bar select {
-    width: 95%;
-    padding: 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    outline: none;
-}
-.side-bar label {
-    align-self: flex-start;
-    margin: 10px 20px 5px;
-    font-size: 0.9rem;
-    color: #e6e8e6;
-}
-.side-bar option {
-    padding: 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    outline: none;
-}
+ .container {
+     width: 100%;
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+     justify-content: center;
+ }
 
-.side-bar textarea {
-    outline: none;
-    border-radius: 5px;
-}
-#editor-container {
-    width: 100%;
-    font-size: 0.8rem;
-}
+ /* Side bar */
 
-.CodeMirror {
-    height: 45vh !important;
-}
+ .side-bar {
+     background-color: var(--navy-2);
+     border-radius: 10px;
+     height: 100%;
+     width: 25%;
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+     justify-content: space-evenly;
+ }
 
-.instructions {
-    width: 90%;
-    color: #e6e8e6;
-    font-size: 0.9rem;
-    margin-top: 20px;
-    margin-left: 30px;
-}
+ .side-bar img {
+     margin-top: 10px;
+     width: 40%;
+     cursor: pointer;
+ }
 
-.instructions li {
-    margin: 15px 0;
-}
+ .side-bar select {
+     width: 95%;
+     padding: 10px;
+     border-radius: 8px;
+     border: 1px solid var(--white);
+     background-color: var(--navy-2);
+     color: var(--white);
+     font-size: 14px;
+     cursor: pointer;
+     appearance: none;
+     background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23f9f9f9' viewBox='0 0 24 24'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+     background-repeat: no-repeat;
+     background-position: right 10px center;
+     background-size: 20px;
+     transition: background-color 0.2s ease, border-color 0.2s ease;
+ }
 
-/* Visualizer */
-.right-side-container {
-    width: 73%;
-    height: 100%;
-    overflow: hidden;
-}
-.visualizer-container {
-    background-color: #99858811;
-    border-radius: 10px;
-    height: 95%;
-    display: flex;
-    flex-direction: column;
-}
-footer {
-    display: flex;
-    width: 50%;
-    margin: 15px auto;
-    justify-content: space-evenly;
-    align-items: center;
-    font-size: 0.9rem;
-}
-footer p {
-    color: #e6e8e6;
-}
-footer i {
-    color: #4eb7f9;
-}
-footer a {
-    color: #e6e8e6;
-    transition: 0.5s;
-}
-footer a:hover {
-    transition: 0.5s;
-    color: #6699cc;
-}
-.control-bar {
-    z-index: 5;
-    display: flex;
-    align-items: center;
-    background-color: #ffffff11;
-    height: 30px;
-    padding: 5px 10px;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-    justify-content: space-evenly;
-}
+ .side-bar select:hover {
+     background-color: var(--navy-1);
+     border-color: var(--blue-1);
+ }
 
-.control-bar-left {
-    display: flex;
-    align-items: center;
-    width: 90%;
-    margin-right: 20px;
-}
+ .side-bar label {
+     align-self: flex-start;
+     margin: 10px 20px 12px;
+     font-size: 0.9rem;
+     color: var(--white);
+ }
 
-.control-bar .run-button {
-    background-color: #2e8b57;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: 0.3s;
-}
-.run-button:hover {
-    background-color: #2e8b5788;
-    transition: 0.3s;
-}
+ .side-bar option {
+     padding: 10px;
+     border-radius: 5px;
+     cursor: pointer;
+     outline: none;
+ }
 
-.progress-container {
-    width: 100%;
-    height: 6px;
-    background-color: #555;
-    border-radius: 3px;
-    overflow: hidden;
-    margin: 0 5px;
-    position: relative;
-    transition: 0.3s;
-}
-.progress-bar {
-    height: 100%;
-    width: 0;
-    background-color: #2e8b57;
-    transition: 0.5s;
-}
+ .side-bar textarea {
+     outline: none;
+     border-radius: 5px;
+ }
 
-/* Recursion tree */
-#visualizer {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-evenly;
-    flex-direction: column;
-    margin-top: 20px;
-}
+ #editor-container {
+     width: 100%;
+     font-size: 0.8rem;
+ }
 
-.tree-wrapper {
-    transform-origin: 0 0;
-    position: relative;
-    overflow: visible;
-}
+ .CodeMirror {
+     height: 45vh !important;
+     font-size: 0.9rem;
 
-.text-display {
-    color: white;
-    font-size: 1.2rem;
-    font-weight: bold;
-    margin-bottom: 70px;
-}
+ }
 
-.node-element {
-    position: absolute;
-    border-radius: 50%;
-    border: 2px solid white;
-    color: white;
-    font-weight: bold;
-    font-size: 14px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transform: scale(0.7);
-    transition: background-color 0.5s ease, transform 0.3s ease;
-}
+ .instructions {
+     width: 90%;
+     color: var(--white);
+     font-size: 0.9rem;
+     margin-top: 20px;
+     margin-left: 30px;
+ }
 
-.params-element {
-    position: absolute;
-    transform: translateX(-50%);
-    height: auto;
-    text-align: center;
-    white-space: nowrap;
-    font-size: 0.7rem;
-}
-.return-value-element {
-    position: absolute;
-    transform: translateX(-50%);
-    height: 20px;
-    text-align: center;
-    white-space: nowrap;
-    font-size: 0.7rem;
-}
+ .instructions li {
+     margin: 15px 0;
+ }
 
-.arrow {
-    position: "relative";
-    max-height: "auto";
-    max-width: "auto";
-    pointer-events: "none";
-    overflow: visible;
-}
-svg {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-.node circle {
-    fill: #a3c5f3;
-    stroke: #66a3ff;
-    stroke-width: 1.5px;
-}
-.node text {
-    fill: #ffffff;
-    font: 12px sans-serif;
-}
-.link {
-    fill: none;
-    stroke: #cccccc;
-    stroke-width: 1.5px;
-}
+ /* Visualizer */
+ .right-side-container {
+     width: 73%;
+     height: 100%;
+     overflow: hidden;
+ }
 
-@media (max-width: 1000px) {
-    .main-container {
-        flex-direction: column;
-        height: auto;
-    }
+ .visualizer-container {
+     background-color: var(--navy-2);
+     border-radius: 10px;
+     height: 95%;
+     display: flex;
+     flex-direction: column;
+ }
 
-    .right-side-container {
-        margin-top: 20px;
-        width: 100%;
-    }
+ footer {
+     display: flex;
+     width: 50%;
+     margin: 15px auto;
+     justify-content: space-evenly;
+     align-items: center;
+     font-size: 0.9rem;
+ }
 
-    .visualizer-container {
-        height: 60vh;
-    }
+ footer p {
+     color: var(--white);
+ }
 
-    .side-bar {
-        width: 100%;
-    }
-    footer {
-        width: 100%;
-    }
-}
+ footer i {
+     color: var(--blue-1);
+ }
+
+ footer a {
+     color: var(--white);
+     transition: 0.5s;
+     text-decoration: none;
+ }
+
+ footer a:hover {
+     color: var(--blue-1);
+     text-decoration: underline;
+ }
+
+ .control-bar {
+     z-index: 5;
+     display: flex;
+     align-items: center;
+     background-color: #ffffff11;
+     height: 30px;
+     padding: 5px 10px;
+     border-top-left-radius: 10px;
+     border-top-right-radius: 10px;
+     justify-content: space-evenly;
+ }
+
+ .control-bar-left {
+     display: flex;
+     align-items: center;
+     width: 90%;
+     margin-right: 20px;
+ }
+
+ .control-bar .run-button {
+     background-color: var(--green-1);
+     color: var(--white);
+     border: none;
+     padding: 5px 10px;
+     border-radius: 5px;
+     cursor: pointer;
+     transition: 0.3s;
+ }
+
+ .run-button:hover {
+     background-color: var(--green-2);
+     transition: 0.3s;
+ }
+
+ .progress-container {
+     width: 100%;
+     height: 6px;
+     background-color: var(--grey-1);
+     border-radius: 3px;
+     overflow: hidden;
+     margin: 0 5px;
+     position: relative;
+     transition: 0.3s;
+ }
+
+ .progress-bar {
+     height: 100%;
+     width: 0;
+     background-color: var(--green-1);
+     transition: 0.5s;
+ }
+
+ /* Recursion tree */
+ #visualizer {
+     position: relative;
+     width: 100%;
+     height: 100%;
+     display: flex;
+     align-items: center;
+     justify-content: space-evenly;
+     flex-direction: column;
+     margin-top: 20px;
+ }
+
+ .tree-wrapper {
+     transform-origin: 0 0;
+     position: relative;
+     overflow: visible;
+ }
+
+ .text-display {
+     color: var(--white);
+     font-size: 1.2rem;
+     font-weight: bold;
+     margin-bottom: 70px;
+ }
+
+ .node-element {
+     position: absolute;
+     border-radius: 50%;
+     border: 2px solid var(--white);
+     color: var(--white);
+     font-weight: bold;
+     font-size: 14px;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     transform: scale(0.7);
+     transition: background-color 0.5s ease, transform 0.3s ease;
+ }
+
+ .params-element {
+     position: absolute;
+     transform: translateX(-50%);
+     height: auto;
+     text-align: center;
+     white-space: nowrap;
+     font-size: 0.9rem;
+ }
+
+ .return-value-element {
+     position: absolute;
+     transform: translateX(-50%);
+     height: 20px;
+     text-align: center;
+     white-space: nowrap;
+     font-size: 0.9rem;
+ }
+
+ .arrow {
+     position: "relative";
+     max-height: "auto";
+     max-width: "auto";
+     pointer-events: "none";
+     overflow: visible;
+ }
+
+ svg {
+     display: flex;
+     align-items: center;
+     justify-content: center;
+ }
+
+ .node circle {
+     fill: var(--blue-1);
+     stroke: var(--blue-2);
+     stroke-width: 1.5px;
+ }
+
+ .node text {
+     fill: var(--white);
+     ;
+ }
+
+ .link {
+     fill: none;
+     stroke: #cccccc;
+     stroke-width: 1.5px;
+ }
+
+ @media (max-width: 1000px) {
+     .main-container {
+         flex-direction: column;
+         height: auto;
+     }
+
+     .right-side-container {
+         margin-top: 20px;
+         width: 100%;
+     }
+
+     .visualizer-container {
+         height: 60vh;
+     }
+
+     .side-bar {
+         width: 100%;
+     }
+
+     footer {
+         width: 100%;
+     }
+ }

@@ -1,108 +1,84 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Recursion Visualizer</title>
-        <link
-            rel="icon"
-            type="image/png"
-            sizes="32x32"
-            href="Images/Icon.png"
-        />
-        <!-- Font Awesome icons -->
-        <link
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-        />
-        <link rel="stylesheet" href="style.css" />
-        <!-- CodeMirror CSS -->
-        <link
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.css"
-        />
-        <link
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/theme/railscasts.css"
-        />
 
-        <!-- Google Fonts -->
-        <link
-            href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
-            rel="stylesheet"
-        />
-    </head>
-    <body>
-        <section class="main-container">
-            <div class="side-bar">
-                <img src="Images/Logo.png" alt="logo" />
-                <div class="container">
-                    <label for="templates">Predefined Templates</label>
-                    <select
-                        name="algorithm-select"
-                        id="algorithm-select"
-                    ></select>
-                </div>
-                <div class="container">
-                    <label for="templates">Recursive Code (JavaScript)</label>
-                    <div id="editor-container">
-                        <textarea
-                            name="code-editor"
-                            id="code-editor"
-                        ></textarea>
-                    </div>
-                </div>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Recursion Visualizer</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="Images/Icon.png" />
+    <!-- Font Awesome icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link rel="stylesheet" href="style.css" />
+    <!-- CodeMirror CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/theme/material.css" />
 
-                <ul class="instructions">
-                    <li>
-                        To try with different parameters, change the default
-                        parameters' values.
-                    </li>
-                    <li>
-                        The main function to be visualized should be named 'fn'.
-                    </li>
-                    <li>One line 'if' statements will not work.</li>
-                </ul>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
+
+<body>
+    <section class="main-container">
+        <div class="side-bar">
+            <img src="Images/Logo.png" alt="logo" />
+            <div class="container">
+                <label for="templates">Predefined Templates</label>
+                <select name="algorithm-select" id="algorithm-select"></select>
             </div>
-            <div class="right-side-container">
-                <div class="visualizer-container" id="visualizer-container">
-                    <div class="control-bar">
-                        <div class="control-bar-left">
-                            <div class="progress-container">
-                                <div
-                                    class="progress-bar"
-                                    id="progress-bar"
-                                ></div>
-                            </div>
+            <div class="container">
+                <label for="templates">Recursive Code (JavaScript)</label>
+                <div id="editor-container">
+                    <textarea name="code-editor" id="code-editor"></textarea>
+                </div>
+            </div>
+
+            <ul class="instructions">
+                <li>
+                    To try with different parameters, change the default
+                    parameters' values.
+                </li>
+                <li>
+                    The main function to be visualized should be named 'fn'.
+                </li>
+                <li>One line 'if' statements will not work.</li>
+            </ul>
+        </div>
+        <div class="right-side-container">
+            <div class="visualizer-container" id="visualizer-container">
+                <div class="control-bar">
+                    <div class="control-bar-left">
+                        <div class="progress-container">
+                            <div class="progress-bar" id="progress-bar"></div>
                         </div>
-
-                        <button class="run-button">Run</button>
                     </div>
-                    <div id="visualizer"></div>
+
+                    <button class="run-button">Run</button>
                 </div>
-                <footer>
-                    <p>Made with <i class="fas fa-heart"></i> by Mena</p>
-                    <a href="https://github.com/Mena-Saleh/TreeVis"
-                        >Github Repo</a
-                    >
-                </footer>
+                <div id="visualizer"></div>
             </div>
-        </section>
+            <footer>
+                <p>Made with <i class="fas fa-heart"></i> by Mena</p>
+                <a href="https://github.com/Mena-Saleh/TreeVis">Github Repo</a>
+            </footer>
+        </div>
+    </section>
 
-        <!-- CodeMirror JS -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/javascript/javascript.min.js"></script>
+    <!-- CodeMirror JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/javascript/javascript.min.js"></script>
 
-        <!-- Sweet Alert -->
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Sweet Alert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-        <!-- Pan Zoom -->
-        <script src="https://unpkg.com/@panzoom/panzoom/dist/panzoom.min.js"></script>
+    <!-- Pan Zoom -->
+    <script src="https://unpkg.com/@panzoom/panzoom/dist/panzoom.min.js"></script>
 
-        <!-- Custom Scripts -->
-        <script src="Scripts/algorithms.js"></script>
-        <script src="Scripts/drawTree.js"></script>
-        <script src="Scripts/buildRecursionGraph.js"></script>
-        <script src="Scripts/main.js"></script>
-    </body>
+    <!-- Custom Scripts -->
+    <script src="Scripts/algorithms.js"></script>
+    <script src="Scripts/drawTree.js"></script>
+    <script src="Scripts/buildRecursionGraph.js"></script>
+    <script src="Scripts/main.js"></script>
+</body>
+
 </html>

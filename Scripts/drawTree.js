@@ -1,12 +1,12 @@
 // Global configuration for visualization
 const visualizerContainer = document.getElementById("visualizer-container");
 const visualizer = document.getElementById("visualizer");
-const activeColor = "#4EB7F9"; // Blue color for active nodes
-const returnColor = "#F4C87A"; // Orange color for returned nodes
-const nodeSize = 40; // Size of each node in pixels
+const activeColor = "#008DD5"; // Blue color for active nodes
+const returnColor = "#E6AF2E"; // Orange color for returned nodes
+const nodeSize = 45; // Size of each node in pixels
 const horizontalSpacing = 40; // Horizontal space between nodes
 const verticalSpacing = 80; // Vertical space between node levels
-const speed = 500; // Animation time in milliseconds
+const animationTime = 500; // Animation time in milliseconds
 
 // Create text display and tree wrapper elements
 const textDisplay = document.createElement("div");
@@ -105,7 +105,7 @@ const drawNodeElement = (node, x, y, color = "transparent") => {
             setTimeout(() => {
                 nodeElement.style.transform = "scale(1.0)";
                 resolve();
-            }, speed / 2.5);
+            }, animationTime / 2.5);
         });
     });
 };
@@ -130,8 +130,8 @@ const setNodeColor = (node, color) => {
                 setTimeout(() => {
                     nodeElement.style.backgroundColor = "transparent";
                     resolve();
-                }, speed / 3.5);
-            }, speed / 2);
+                }, animationTime / 3.5);
+            }, animationTime / 2);
         } else {
             resolve();
         }
@@ -232,7 +232,7 @@ const drawReturnValue = (node, x, y) => {
                     resolve();
                 });
             },
-            node.children.length ? speed : 0
+            node.children.length ? animationTime : 0
         );
     });
 };
@@ -317,8 +317,8 @@ const drawNode = async (node, parent = null) => {
 
             // Animate node color change on return
             await setNodeColor(node, returnColor);
-            resolve();
-        }, speed);
+            setTimeout(() => resolve(), animationTime / 3.5);
+        }, animationTime);
     });
 };
 
