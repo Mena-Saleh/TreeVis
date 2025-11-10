@@ -9,8 +9,8 @@ const codeEditor = CodeMirror.fromTextArea(
         mode: "javascript",
         lineNumbers: true,
         theme: "material",
-        tabSize: 4,
-        indentUnit: 4,
+        tabSize: 2,
+        indentUnit: 2,
         indentWithTabs: true,
         lineWrapping: true,
     }

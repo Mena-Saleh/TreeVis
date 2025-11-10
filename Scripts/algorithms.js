@@ -1,17 +1,17 @@
 const algorithms = {
-    Fibonacci: `function fn(n = 5) {
+  Fibonacci: `function fn(n = 5) {
   if (n <= 1) {
     return n;
   }
   return fn(n - 1) + fn(n - 2);
 }`,
-    Factorial: `function fn(n = 3) {
+  Factorial: `function fn(n = 3) {
   if (n <= 1) {
     return 1;
   }
   return n * fn(n - 1);
 }`,
-    "Merge Sort": `function fn(arr = [5, 2, 9, 1, 5, 6]) {
+  "Merge Sort": `function fn(arr = [5, 2, 9, 1, 5, 6]) {
     if (arr.length <= 1){
     return arr;
     }
@@ -37,7 +37,7 @@ function merge(left, right) {
 
     return result.concat(left.slice(i)).concat(right.slice(j));
 }`,
-    "Longest Common Subsequence (Memoized)": `var str1 = "ABC";
+  "Longest Common Subsequence (Memoized)": `var str1 = "ABC";
 var str2 = "AEB";
 var memo = {}; 
 
@@ -60,7 +60,7 @@ function fn(m = str1.length, n = str2.length) {
 
     return memo[key];
 }`,
-    "Quick Sort": `function fn(arr = [3, 6, 8, 10, 1, 2, 1]) {
+  "Quick Sort": `function fn(arr = [3, 6, 8, 10, 1, 2, 1]) {
     if (arr.length <= 1) {
         return arr;
     }
@@ -82,7 +82,7 @@ function fn(m = str1.length, n = str2.length) {
 
     return sortedLeft.concat([pivot], sortedRight);
 }`,
-    "Fibonacci (Memoized)": `const memo = {};
+  "Fibonacci (Memoized)": `const memo = {};
 function fn(n = 5) {
   if (n in memo) {
     return memo[n];
@@ -96,7 +96,7 @@ function fn(n = 5) {
   memo[n] = fn(n - 1) + fn(n - 2);
   return memo[n];
 }`,
-    "Binary Search": `function fn(arr = [1, 3, 5, 7, 9, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100], target = 9, offset = 0) {
+  "Binary Search": `function fn(arr = [1, 3, 5, 7, 9, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100], target = 9, offset = 0) {
   if (arr.length === 0) {
     return -1;
   }
@@ -117,7 +117,7 @@ function fn(n = 5) {
     return result !== -1 ? result : -1;
   }
 }`,
-    "Tower Of Hanoi": `function fn(disks = 3, source = 'A', target = 'C', auxiliary = 'B') {
+  "Tower Of Hanoi": `function fn(disks = 3, source = 'A', target = 'C', auxiliary = 'B') {
   if (disks === 1) {
     console.log(\`Move disk 1 from \${source} to \${target}\`);
     return;
@@ -127,14 +127,14 @@ function fn(n = 5) {
   console.log(\`Move disk \${disks} from \${source} to \${target}\`);
   fn(disks - 1, auxiliary, target, source);
 }`,
-    GCD: `function fn(a = 48, b = 18) {
+  GCD: `function fn(a = 48, b = 18) {
   if (b === 0) {
     return a;
   }
 
   return fn(b, a % b);
 }`,
-    "Palindrome Partitioning": `function fn(str = "aab", start = 0) {
+  "Palindrome Partitioning": `function fn(str = "aab", start = 0) {
   if (start >= str.length) {
     return [[]];
   }
@@ -166,8 +166,9 @@ function isPalindrome(str, left, right) {
   return true;
 }`,
 
-    "Coin Change (Memoized)": `const memo = {};
-function fn(coins = [1, 2, 5], amount = 11) {
+  "Coin Change (Memoized)": `const memo = {};
+const coins = [1, 2, 5];
+function fn(amount = 11) {
   if (amount === 0) {
     return 0;
   }
@@ -181,7 +182,7 @@ function fn(coins = [1, 2, 5], amount = 11) {
   let minCoins = Infinity;
 
   for (let i = 0; i < coins.length; i++) {
-    const res = fn(coins, amount - coins[i]);
+    const res = fn(amount - coins[i]);
     if (res !== Infinity) {
       minCoins = Math.min(minCoins, res + 1);
     }
@@ -191,8 +192,10 @@ function fn(coins = [1, 2, 5], amount = 11) {
   return memo[amount];
 }`,
 
-    "0/1 Knapsack (Memoized)": `const memo = {};
-function fn(weights = [1, 3, 4, 5], values = [1, 4, 5, 7], capacity = 7, n = weights.length) {
+  "0/1 Knapsack (Memoized)": `const memo = {};
+const weights = [1, 3, 4, 5];
+const values = [1, 4, 5, 7];
+function fn(capacity = 7, n = weights.length) {
   const key = n + "," + capacity;
   
   if (n === 0 || capacity === 0) {
@@ -204,18 +207,20 @@ function fn(weights = [1, 3, 4, 5], values = [1, 4, 5, 7], capacity = 7, n = wei
   }
   
   if (weights[n - 1] > capacity) {
-    memo[key] = fn(weights, values, capacity, n - 1);
+    memo[key] = fn(capacity, n - 1);
   } else {
-    const includeItem = values[n - 1] + fn(weights, values, capacity - weights[n - 1], n - 1);
-    const excludeItem = fn(weights, values, capacity, n - 1);
+    const includeItem = values[n - 1] + fn(capacity - weights[n - 1], n - 1);
+    const excludeItem = fn(capacity, n - 1);
     memo[key] = Math.max(includeItem, excludeItem);
   }
   
   return memo[key];
 }`,
 
-    "Edit Distance (Memoized)": `const memo = {};
-function fn(str1 = "kitten", str2 = "sitting", m = str1.length, n = str2.length) {
+  "Edit Distance (Memoized)": `const memo = {};
+const str1 = "kitten";
+const str2 = "sitting"; 
+function fn(m = str1.length, n = str2.length) {
   const key = m + "," + n;
   
   if (m === 0) {
@@ -231,17 +236,17 @@ function fn(str1 = "kitten", str2 = "sitting", m = str1.length, n = str2.length)
   }
   
   if (str1[m - 1] === str2[n - 1]) {
-    memo[key] = fn(str1, str2, m - 1, n - 1);
+    memo[key] = fn(m - 1, n - 1);
   } else {
-    const insertOp = fn(str1, str2, m, n - 1);
-    const deleteOp = fn(str1, str2, m - 1, n);
-    const replaceOp = fn(str1, str2, m - 1, n - 1);
+    const insertOp = fn(m, n - 1);
+    const deleteOp = fn(m - 1, n);
+    const replaceOp = fn(m - 1, n - 1);
     memo[key] = 1 + Math.min(insertOp, deleteOp, replaceOp);
   }
   
   return memo[key];
 }`,
-    Custom: `// Define your global variables here
+  Custom: `// Define your global variables here
 var x = "hello world"
 // Main recursive function (do not change the name from fn)
 function fn() {
